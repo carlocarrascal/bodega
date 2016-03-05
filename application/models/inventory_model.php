@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Inventory_model extends CI_Model{
 
 	/**
 	 * Index Page for this controller.
@@ -17,9 +17,18 @@ class Login extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index()
+	public function __construct()
 	{
-		$this->load->view('login_view');
+		parent::__construct();
+	}
+
+	public function create()
+	{
+		$data = array('username'=>  $this->input->post('username'),
+                'password'=>$this->input->post('password'));
+        $this->db->insert('user', $data);
+        echo'<div class="alert alert-success">One record inserted Successfully</div>';
+        exit;
 	}
 }
 

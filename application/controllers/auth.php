@@ -11,6 +11,16 @@ class Auth extends CI_Controller
 		$this->load->library('security');
 		$this->load->library('tank_auth');
 		$this->lang->load('tank_auth');
+		$this->_init();
+	}
+
+	private function _init()
+	{
+		$this->output->set_template('default');
+
+		$this->load->js('assets/themes/default/js/jquery-1.9.1.min.js');
+		$this->load->js('assets/themes/default/hero_files/bootstrap-transition.js');
+		$this->load->js('assets/themes/default/hero_files/bootstrap-collapse.js');
 	}
 
 	function index()
@@ -29,6 +39,7 @@ class Auth extends CI_Controller
 	 */
 	function login()
 	{
+		$this->output->set_template('login');
 		if ($this->tank_auth->is_logged_in()) {									// logged in
 			redirect('');
 
