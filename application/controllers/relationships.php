@@ -6,8 +6,8 @@ class Relationships extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('url');
 		$this->load->library('tank_auth');
+		$this->load->model("relationship_model");
 
 		$this->_init();
 	}
@@ -27,14 +27,43 @@ class Relationships extends CI_Controller
 		}
 	}
 
-	function index()
+	public function index()
 	{
+		//print_r($this->relationship_model->getall());
 		
-		$this->load->view('relationships/show');
+		if (!$this->tank_auth->is_logged_in()) {
+			redirect('/auth/login/');
+		} else {
+			
+			$this->data['user_id']	= $this->tank_auth->get_user_id();
+			$this->data['username']	= $this->tank_auth->get_username();
+			$this->data['accounts'] = $this->relationship_model->getall();
+		
+			$this->load->view('relationships/show',$this->data);
+		}
 	}
 
-	function add()
+	public function accounts($id)
 	{
-		$this->load->view('relationships/add');
+		//print_r($this->relationship_model->getall());
+		$this->data['accounts'] = $this->relationship_model->getaccountbyid($id);
+		
+		$this->load->view('relationships/accounts',$this->data);
 	}
+
+	public function create()
+	{
+		//print_r($this->input->post());
+		$this->form_validation->set_rules('name', 'Company Name', 'required');
+        if ($this->form_validation->run() == FALSE){
+           echo'<div class="alert alert-danger">'.validation_errors().'</div>';
+
+           exit;
+        }
+        else{
+            $this->relationship_model->create();
+        }
+		//$this->load->view('relationships/add');
+	}
+
 }

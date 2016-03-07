@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Inventory_model extends CI_Model{
+class Relationship_model extends CI_Model{
 
 	/**
 	 * Index Page for this controller.
@@ -24,9 +24,9 @@ class Inventory_model extends CI_Model{
 
 	public function getall()
 	{
-		$this->db->select('id,name, desc');
+		$this->db->select('id,name, address, contact_person, contact_number, contact_type');
 
-		$query = $this->db->get('products');
+		$query = $this->db->get('accounts');
 		
 		if ($query->num_rows() > 0)
 		{
@@ -38,23 +38,42 @@ class Inventory_model extends CI_Model{
 		}
 
 	}
+	public function getaccountbyid( $id )
+	{
+		$this->db->select('id,name, address, contact_person, contact_number, contact_type');
+		$this->db->where('id', $id);
+		$query = $this->db->get('accounts');
+
+		
+		if ($query->num_rows() > 0)
+		{
+		 	$rows = $query->result();  // this returns an object of all results
+			return $rows[0]; 
+		}
+
+	}
 
 	public function create()
 	{
 		$data = array('name'=>  $this->input->post('name'),
-                'desc'=>$this->input->post('description'));
-        $this->db->insert('products', $data);
-
-        $prod_id = $this->db->insert_id();
-        $data2 = array('sku'=>  $this->input->post('sku'),
-                'product_id'=>$prod_id,
-        		'buy_price'=>  $this->input->post('buyprice'),
-        		'retail_price'=>  $this->input->post('retailprice'),
-        		'wholesale_price'=>  $this->input->post('wholesaleprice'));
-        $this->db->insert('variants', $data2);
-
+                'address'=>$this->input->post('address'),
+                'contact_person'=>$this->input->post('contactperson'),
+                'contact_number'=>$this->input->post('contactnumber'),
+                'contact_type'=>$this->input->post('contacttype'));
+        $this->db->insert('accounts', $data);
         echo'<div class="alert alert-success">One record inserted Successfully</div>';
         exit;
+	}
+
+	public function getaccounttype( $type )
+	{
+		if($type == 1)
+		{
+			return "Supplier";
+		}
+		else{
+			return "Customer";
+		}
 	}
 }
 

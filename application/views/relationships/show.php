@@ -9,8 +9,56 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="btn-group" role="group" aria-label="...">
-                    <a href="<?php echo base_url();?>relationships/add" class="btn btn-primary">Add Customer</a>
-                    <a href="#" class="btn btn-primary">Add Supplier</a>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Company</button>
+                </div>
+                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form role="form" method="post" action="<?php echo base_url();?>relationships/create">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">New Company</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Company Name</label>
+                                        <input class="form-control" name="name" id="name">
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Company Address</label>
+                                        <input class="form-control" name="address"  id="address">
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Person</label>
+                                        <input class="form-control" name="contactperson"  id="contactperson">
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input class="form-control" name="contactnumber"  id="contactnumber">
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Type</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="contacttype" id="contacttype" value="1" checked="">Supplier
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="contacttype" id="contacttype" value="2">Customer
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
                 </div>
             </div>
             <!-- /.panel-heading -->
@@ -20,41 +68,23 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Company Code</th>
+                                <th>Company name</th>
                                 <th>Type</th>
                                 <th>Phone number</th>
-                                <th>Email</th>
+                                <th>Contact Person</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <?php foreach($accounts as $account){?>
                             <tr class="odd gradeX">
-                                <td>Trident</td>
-                                <td>Internet Explorer 4.0</td>
-                                <td>Supplier</td>
-                                <td class="center">4</td>
-                                <td class="center">X</td>
+                                <td><a href="<?php echo current_url().'/accounts/'.$account->id;?>"><?php echo $account->name;?></td>
+                                <td><?php echo $account->address;?></td>
+                                <td><?php echo $this->relationship_model->getaccounttype($account->contact_type);?></td>
+                                <td class="center"><?php echo $account->contact_number;?></td>
+                                <td class="center"><?php echo $account->contact_person;?></td>
                             </tr>
-                            <tr class="even gradeC">
-                                <td>Trident</td>
-                                <td>Internet Explorer 5.0</td>
-                                <td>Supplier</td>
-                                <td class="center">5</td>
-                                <td class="center">C</td>
-                            </tr>
-                            <tr class="odd gradeA">
-                                <td>Trident</td>
-                                <td>Internet Explorer 5.5</td>
-                                <td>Customer</td>
-                                <td class="center">5.5</td>
-                                <td class="center">A</td>
-                            </tr>
-                            <tr class="even gradeA">
-                                <td>Trident</td>
-                                <td>Internet Explorer 6</td>
-                                <td>Customer</td>
-                                <td class="center">6</td>
-                                <td class="center">A</td>
-                            </tr>
+                            <?php }?> 
+                            
                            
                         </tbody>
                     </table>
