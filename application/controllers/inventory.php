@@ -38,6 +38,14 @@ class Inventory extends CI_Controller
 			$this->load->view('inventory/show',$this->data);
 		}
 	}
+	
+	public function products($id)
+	{
+		//print_r($this->relationship_model->getall());
+		$this->data['products'] = $this->inventory_model->getproductbyid($id);
+		$this->data['variants'] = $this->inventory_model->getvariants($id);
+		$this->load->view('inventory/products',$this->data);
+	}
 
 	public function create()
 	{

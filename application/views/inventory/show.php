@@ -78,7 +78,7 @@
                         <tbody>
                             <?php foreach($products as $product){?>
                             <tr class="odd gradeX">
-                                <td><a href="<?php //echo current_url().'/accounts/'.$account->id;?>"><?php echo $product->name;?></td>
+                                <td><a href="<?php echo current_url().'/products/'.$product->id;?>"><?php echo $product->name;?></td>
                                 <td><?php echo $product->desc;?></td>
                                 <td><?php //echo $this->relationship_model->getaccounttype($account->contact_type);?></td>
                                 <td class="center"><?php //echo $account->contact_number;?></td>

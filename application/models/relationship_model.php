@@ -38,6 +38,7 @@ class Relationship_model extends CI_Model{
 		}
 
 	}
+	
 	public function getaccountbyid( $id )
 	{
 		$this->db->select('id,name, address, contact_person, contact_number, contact_type');

@@ -38,6 +38,38 @@ class Inventory_model extends CI_Model{
 		}
 
 	}
+	
+	public function getproductbyid( $id )
+	{
+		$this->db->select('id,name, desc');
+		$this->db->where('id', $id);
+		$query = $this->db->get('products');
+
+		
+		if ($query->num_rows() > 0)
+		{
+		 	$rows = $query->result();  // this returns an object of all results
+			return $rows[0]; 
+		}
+
+	}
+
+	public function getvariants( $id )
+	{
+		$this->db->select('id,sku, buy_price, retail_price');
+		$this->db->where('id', $id);
+		$query = $this->db->get('variants');
+		
+		if ($query->num_rows() > 0)
+		{
+		   foreach ($query->result() as $row)
+		   {
+
+		   		return $query->result();
+		   }
+		}
+
+	}
 
 	public function create()
 	{
