@@ -9,57 +9,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="btn-group" role="group" aria-label="...">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Products</button>
-                </div>
-                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form role="form" method="post" action="<?php echo base_url();?>inventory/create">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title" id="myModalLabel">New Product</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Product Name</label>
-                                        <input class="form-control" name="name" id="name">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Description </label>
-                                        <input class="form-control" name="description"  id="description">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Sku</label>
-                                        <input class="form-control" name="sku"  id="sku">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Buy Price</label>
-                                        <input class="form-control" name="buyprice"  id="buyprice">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Retail Price</label>
-                                        <input class="form-control" name="retailprice"  id="retailprice">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Wholesale price</label>
-                                        <input class="form-control" name="wholesaleprice"  id="wholesaleprice">
-                                        
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </form>
-                        </div>
-                        <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
+                    <button class="btn btn-success" onclick="add_person()"><i class="glyphicon glyphicon-plus"></i> Add Product</button>
+                    <button class="btn btn-default" onclick="reload_table()"><i class="glyphicon glyphicon-refresh"></i> Reload</button>
                 </div>
             </div>
             <!-- /.panel-heading -->
@@ -73,25 +24,32 @@
                                 <th>Product Type</th>
                                 <th>Brand</th>
                                 <th>Available</th>
+                                <th>Last Updated</th>
+                                <th style="width:125px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($products as $product){?>
-                            <tr class="odd gradeX">
-                                <td><a href="<?php echo current_url().'/products/'.$product->id;?>"><?php echo $product->name;?></td>
-                                <td><?php echo $product->desc;?></td>
-                                <td><?php //echo $this->relationship_model->getaccounttype($account->contact_type);?></td>
-                                <td class="center"><?php //echo $account->contact_number;?></td>
-                                <td class="center"><?php //echo $account->contact_person;?></td>
-                            </tr>
-                            <?php }?> 
-                            
-                           
                         </tbody>
+             
+                        <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Product Type</th>
+                            <th>Brand</th>
+                            <th>Available</th>
+                            <th>Last Updated</th>
+                            <th style="width:125px;">Action</th>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <!-- /.table-responsive -->
-                
+                <!--<div class="well">
+                    <h4>DataTables Usage Information</h4>
+                    <p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
+                    <a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
+                </div>-->
             </div>
             <!-- /.panel-body -->
         </div>
@@ -99,3 +57,41 @@
     </div>
     <!-- /.col-lg-12 -->
 </div>
+
+<!-- Bootstrap modal -->
+<div class="modal fade" id="modal_form" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Product Form</h3>
+            </div>
+            <div class="modal-body form">
+                <form action="#" id="form" class="form-horizontal">
+                    <input type="hidden" value="" name="id"/>
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Name</label>
+                            <div class="col-md-9">
+                                <input name="name" placeholder="Product Name" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Description</label>
+                            <div class="col-md-9">
+                                <input name="desc" placeholder="Description" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,64 +1,16 @@
 
 <div class="row">
-	<div class="col-lg-12">
-		<h4 class="page-header">Relationships</h4>
-	</div>
+    <div class="col-lg-12">
+        <h4 class="page-header">Contacts</h4>
+    </div>
 </div>
  <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="btn-group" role="group" aria-label="...">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Company</button>
-                </div>
-                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form role="form" method="post" action="<?php echo base_url();?>relationships/create">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title" id="myModalLabel">New Company</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Company Name</label>
-                                        <input class="form-control" name="name" id="name">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Company Address</label>
-                                        <input class="form-control" name="address"  id="address">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Person</label>
-                                        <input class="form-control" name="contactperson"  id="contactperson">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Number</label>
-                                        <input class="form-control" name="contactnumber"  id="contactnumber">
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Type</label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="contacttype" id="contacttype" value="1" checked="">Supplier
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="contacttype" id="contacttype" value="2">Customer
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </form>
-                        </div>
-                        <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
+                    <button class="btn btn-success" onclick="add_person()"><i class="glyphicon glyphicon-plus"></i> Add Contacts</button>
+                    <button class="btn btn-default" onclick="reload_table()"><i class="glyphicon glyphicon-refresh"></i> Reload</button>
                 </div>
             </div>
             <!-- /.panel-heading -->
@@ -68,29 +20,36 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Company name</th>
+                                <th>Address</th>
                                 <th>Type</th>
-                                <th>Phone number</th>
-                                <th>Contact Person</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Last Updated</th>
+                                <th style="width:125px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($accounts as $account){?>
-                            <tr class="odd gradeX">
-                                <td><a href="<?php echo current_url().'/accounts/'.$account->id;?>"><?php echo $account->name;?></td>
-                                <td><?php echo $account->address;?></td>
-                                <td><?php echo $this->relationship_model->getaccounttype($account->contact_type);?></td>
-                                <td class="center"><?php echo $account->contact_number;?></td>
-                                <td class="center"><?php echo $account->contact_person;?></td>
-                            </tr>
-                            <?php }?> 
-                            
-                           
                         </tbody>
+             
+                        <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Product Type</th>
+                            <th>Brand</th>
+                            <th>Available</th>
+                            <th>Last Updated</th>
+                            <th style="width:125px;">Action</th>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <!-- /.table-responsive -->
-                
+                <!--<div class="well">
+                    <h4>DataTables Usage Information</h4>
+                    <p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
+                    <a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
+                </div>-->
             </div>
             <!-- /.panel-body -->
         </div>
@@ -98,3 +57,59 @@
     </div>
     <!-- /.col-lg-12 -->
 </div>
+
+<!-- Bootstrap modal -->
+<div class="modal fade" id="modal_form" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Product Form</h3>
+            </div>
+            <div class="modal-body form">
+                <form action="#" id="form" class="form-horizontal">
+                    <input type="hidden" value="" name="id"/>
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Company Name</label>
+                            <div class="col-md-9">
+                                <input name="name" placeholder="Company Name" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Email</label>
+                            <div class="col-md-9">
+                                <input name="email" placeholder="Email" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Contact Number</label>
+                            <div class="col-md-9">
+                                <input name="contact_number" placeholder="Contact Number" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Contact Type</label>
+                            <div class="col-md-9">
+                                <label class="radio-inline">
+                                    <input type="radio" name="contacttype" id="contacttype" value="1" checked="">Supplier
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="contacttype" id="contacttype" value="2">Customer
+                                </label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

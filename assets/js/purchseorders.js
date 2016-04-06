@@ -10,7 +10,7 @@ var save_method; //for save method string
 var table;
  
 $(document).ready(function() {
-    var pid = $('[name="pid"]').val();
+ 
     //datatables
     table = $('#dataTables-example').DataTable({
  
@@ -20,9 +20,8 @@ $(document).ready(function() {
  
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": "../../variants/ajax_list",
-            "type": "POST",
-            "data": { product_id: pid }
+            "url": "purchase_orders/ajax_list",
+            "type": "POST"
         },
  
         //Set column definition initialisation properties.
@@ -34,7 +33,7 @@ $(document).ready(function() {
         ],
  
     });
-    
+ 
     //datepicker
     // $('.datepicker').datepicker({
     //     autoclose: true,
@@ -72,7 +71,7 @@ function add_person()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal('show'); // show bootstrap modal
-    $('.modal-title').text('Add Variant'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Product'); // Set Title to Bootstrap modal title
 }
  
 function edit_person(id)
@@ -116,9 +115,9 @@ function save()
     var url;
  
     if(save_method == 'add') {
-        url = "../../variants/ajax_add";
+        url = "orders/ajax_add";
     } else {
-        url = "../../variants/ajax_update";
+        url = "orders/ajax_update";
     }
  
     // ajax adding data to database

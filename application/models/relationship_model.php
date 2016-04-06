@@ -2,81 +2,125 @@
 
 class Relationship_model extends CI_Model{
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -  
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in 
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+ 
+    var $table = 'accounts';
+    var $column = array('name','address','contact_number','email','contact_type','updated_at'); //set column field database for order and search
+    var $order = array('id' => 'desc'); // default order
+ 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->database();
+    }
+ 
+    private function _get_datatables_query()
+    {
+         
+        $this->db->from($this->table);
+ 
+        $i = 0;
+     
+        foreach ($this->column as $item) // loop column
+        {
+            if(isset($_POST['search']['value']) && !empty($_POST['search']['value'])) // if datatable send POST for search
+            {
+                 
+                if($i===0) // first loop
+                {
+                    //$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                }
+                else
+                {
+                    $this->db->or_like($item, $_POST['search']['value']);
+                }
+ 
+                //if(count($this->column) - 1 == $i) //last loop
+                    //$this->db->group_end(); //close bracket
+            }
+            $column[$i] = $item; // set column array variable to order processing
+            $i++;
+        }
+         
+        if(isset($_POST['order'])) // here order processing
+        {
+            $this->db->order_by($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        }
+        else if(isset($this->order))
+        {
+            $order = $this->order;
+            $this->db->order_by(key($order), $order[key($order)]);
+        }
+    }
+ 
+    function get_datatables()
+    {
+        $this->_get_datatables_query();
+        if(isset($_POST['length']) && $_POST['length'] != -1)
+        $this->db->limit($_POST['length'], $_POST['start']);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
-	public function getall()
-	{
-		$this->db->select('id,name, address, contact_person, contact_number, contact_type');
-
-		$query = $this->db->get('accounts');
-		
-		if ($query->num_rows() > 0)
-		{
-		   foreach ($query->result() as $row)
-		   {
-
-		   		return $query->result();
-		   }
-		}
-
-	}
-	
-	public function getaccountbyid( $id )
-	{
-		$this->db->select('id,name, address, contact_person, contact_number, contact_type');
-		$this->db->where('id', $id);
-		$query = $this->db->get('accounts');
-
-		
-		if ($query->num_rows() > 0)
-		{
-		 	$rows = $query->result();  // this returns an object of all results
-			return $rows[0]; 
-		}
-
-	}
-
-	public function create()
-	{
-		$data = array('name'=>  $this->input->post('name'),
-                'address'=>$this->input->post('address'),
-                'contact_person'=>$this->input->post('contactperson'),
-                'contact_number'=>$this->input->post('contactnumber'),
-                'contact_type'=>$this->input->post('contacttype'));
-        $this->db->insert('accounts', $data);
-        echo'<div class="alert alert-success">One record inserted Successfully</div>';
-        exit;
-	}
-
-	public function getaccounttype( $type )
-	{
-		if($type == 1)
-		{
-			return "Supplier";
-		}
-		else{
-			return "Customer";
-		}
-	}
+    function get_all()
+    {
+        $this->_get_datatables_query();
+        if(isset($_POST['name_startsWith']))
+        {
+            $this->db->like('name',$_POST['name_startsWith']);
+        }
+         $query = $this->db->get();
+         $data = array();
+        foreach ($query->result() as $row)
+        {
+            $name = $row->name.'|'.$row->address;
+            array_push($data, $name);   
+           
+        }
+        return $data;
+    }
+ 
+    function count_filtered()
+    {
+        $this->_get_datatables_query();
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+ 
+    public function count_all()
+    {
+        $this->db->from($this->table);
+        return $this->db->count_all_results();
+    }
+ 
+    public function get_by_id($id)
+    {
+        $this->db->from($this->table);
+        $this->db->where('id',$id);
+        $query = $this->db->get();
+ 
+        return $query->row();
+    }
+ 
+    public function save($data)
+    {
+        $this->db->insert($this->table, $data);
+        return $this->db->insert_id();
+    }
+ 
+    public function update($where, $data)
+    {
+        $this->db->update($this->table, $data, $where);
+        return $this->db->affected_rows();
+    }
+ 
+    public function delete_by_id($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete($this->table);
+    }
+ 
+ 
 }
-
 /* End of file welcome.php */
 /* Location: ./application/controllers/welcome.php */

@@ -1,10 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Inventory_model extends CI_Model{
+class Variant_model extends CI_Model{
 
  
-    var $table = 'products';
-    var $column = array('name','desc','updated_at'); //set column field database for order and search
+    var $table = 'variants';
+    var $column = array('sku','stock_on_hand','committed_stock','buy_price','retail_price','stock_on_hand'); //set column field database for order and search
     var $order = array('id' => 'desc'); // default order
  
     public function __construct()
@@ -22,7 +22,7 @@ class Inventory_model extends CI_Model{
      
         foreach ($this->column as $item) // loop column
         {
-            if($_POST['search']['value']) // if datatable send POST for search
+            if(isset($_POST['search']['value']) && !empty($_POST['search']['value'])) // if datatable send POST for search
             {
                  
                 if($i===0) // first loop
@@ -57,9 +57,35 @@ class Inventory_model extends CI_Model{
     {
         $this->_get_datatables_query();
         if(isset($_POST['length']) && $_POST['length'] != -1)
-        $this->db->limit($_POST['length'], $_POST['start']);
+        {
+            $this->db->limit($_POST['length'], $_POST['start']);
+        }
+        
+        if(isset($_POST['product_id']) && !empty($_POST['product_id']))
+        {
+            $this->db->where('product_id',$_POST['product_id']);
+        }
+
         $query = $this->db->get();
         return $query->result();
+    }
+
+    function get_all()
+    {
+        $this->_get_datatables_query();
+        if(isset($_POST['sku']))
+        {
+            $this->db->like('sku',$_POST['sku']);
+        }
+         $query = $this->db->get();
+         $data = array();
+        foreach ($query->result() as $row)
+        {
+            $name = $row->sku.'|'.$row->desc.'|'.($row->stock_on_hand - $row->committed_stock).'|'.$row->retail_price.'|'.$row->stock_on_hand.'|'.$row->buy_price;
+            array_push($data, $name);   
+           
+        }
+        return $data;
     }
  
     function count_filtered()
@@ -83,6 +109,7 @@ class Inventory_model extends CI_Model{
  
         return $query->row();
     }
+ 
  
     public function save($data)
     {

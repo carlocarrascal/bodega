@@ -287,7 +287,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="<?php echo base_url(); ?>home"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="<?php echo base_url(); ?>relationships"><i class="fa fa-users fa-fw"></i> Relationships</a>

@@ -12,8 +12,10 @@
     <title>BiGan</title>
 
     <!-- Bootstrap Core CSS -->
+    
+    
     <link href="<?php echo base_url();?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="<?php echo base_url();?>assets/dist/css/bootstrap-switch.css" rel="stylesheet">
     <!-- MetisMenu CSS -->
     <link href="<?php echo base_url();?>assets/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
 
@@ -285,7 +287,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="<?php echo base_url(); ?>home"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="<?php echo base_url(); ?>relationships"><i class="fa fa-users fa-fw"></i> Relationships</a>
@@ -325,7 +327,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="<?php echo base_url();?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
+    
     <!-- Metis Menu Plugin JavaScript -->
     <script src="<?php echo base_url();?>assets/bower_components/metisMenu/dist/metisMenu.min.js"></script>
 

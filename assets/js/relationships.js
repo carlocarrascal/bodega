@@ -10,7 +10,7 @@ var save_method; //for save method string
 var table;
  
 $(document).ready(function() {
-    var pid = $('[name="pid"]').val();
+ 
     //datatables
     table = $('#dataTables-example').DataTable({
  
@@ -20,9 +20,8 @@ $(document).ready(function() {
  
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": "../../variants/ajax_list",
-            "type": "POST",
-            "data": { product_id: pid }
+            "url": "relationships/ajax_list",
+            "type": "POST"
         },
  
         //Set column definition initialisation properties.
@@ -34,7 +33,7 @@ $(document).ready(function() {
         ],
  
     });
-    
+ 
     //datepicker
     // $('.datepicker').datepicker({
     //     autoclose: true,
@@ -72,7 +71,7 @@ function add_person()
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal('show'); // show bootstrap modal
-    $('.modal-title').text('Add Variant'); // Set Title to Bootstrap modal title
+    $('.modal-title').text('Add Product'); // Set Title to Bootstrap modal title
 }
  
 function edit_person(id)
@@ -84,7 +83,7 @@ function edit_person(id)
  
     //Ajax Load data from ajax
     $.ajax({
-        url : "orders/ajax_edit/" + id,
+        url : "relationships/ajax_edit/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
@@ -92,9 +91,12 @@ function edit_person(id)
  
             $('[name="id"]').val(data.id);
             $('[name="name"]').val(data.name);
-            $('[name="desc"]').val(data.desc);
+            $('[name="address"]').val(data.address);
+            $('[name="contact_number"]').val(data.contact_number);
+            $('[name="contact_type"]').val(data.contact_type);
+            $('[name="email"]').val(data.email);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Edit Person'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Edit Contact'); // Set title to Bootstrap modal title
  
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -116,9 +118,9 @@ function save()
     var url;
  
     if(save_method == 'add') {
-        url = "../../variants/ajax_add";
+        url = "relationships/ajax_add";
     } else {
-        url = "../../variants/ajax_update";
+        url = "relationships/ajax_update";
     }
  
     // ajax adding data to database
@@ -164,7 +166,7 @@ function delete_person(id)
     {
         // ajax delete data to database
         $.ajax({
-            url : "orders/ajax_delete/"+id,
+            url : "relationships/ajax_delete/"+id,
             type: "POST",
             dataType: "JSON",
             success: function(data)

@@ -34,7 +34,7 @@
 		}
 	}
 }*/
-class Inventory extends CI_Controller {
+class Variants extends CI_Controller {
  
     public function __construct()
     {
@@ -43,7 +43,7 @@ class Inventory extends CI_Controller {
 		$this->load->library('tank_auth');
 
 		$this->_init();
-        $this->load->model('inventory_model','person');
+        $this->load->model('variant_model','person');
     }
 
     private function _init()
@@ -52,30 +52,16 @@ class Inventory extends CI_Controller {
 
 		$this->load->js('assets/bower_components/datatables/media/js/jquery.dataTables.min.js');
 		$this->load->js('assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js');
-		$this->load->js('assets/dist/js/bootstrap-switch.min.js');
-		
+		$this->load->js('assets/js/variants.js');
 		$this->load->css('assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css');		
 		$this->load->css('assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css');
-
 	}
  
     public function index()
     {
         $this->output->set_template('simple');
         $this->load->helper('url');
-        $this->load->view('inventory/show');
-        $this->load->js('assets/js/inventory.js');
-    }
- 
-    public function products($id)
-    {
-        $data = $this->person->get_by_id($id);
-        //print_r($data);
-        $this->output->set_template('simple');
-        $this->load->helper('url');
-        $this->load->view('inventory/products', $data);
-        $this->load->js('assets/js/products.js');
-
+        $this->load->view('orders/show');
     }
  
     public function ajax_list()
@@ -87,12 +73,11 @@ class Inventory extends CI_Controller {
         foreach ($list as $person) {
             $no++;
             $row = array();
-            $row[] = '<a href="'.base_url().'inventory/products/'.$person->id.'">'.$person->name.'</a>';
-            $row[] = $person->desc;
-            $row[] = "";
-            $row[] = $person->desc;
-            $row[] = $person->desc;
-            $row[] = date("M d Y", strtotime($person->updated_at));
+            $row[] = $person->sku;
+            $row[] = $person->buy_price;
+            $row[] = $person->retail_price;
+            $row[] = $person->stock_on_hand;
+            $row[] = $person->stock_on_hand;
  
             //add html for action
             $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="edit_person('."'".$person->id."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>';
@@ -110,6 +95,13 @@ class Inventory extends CI_Controller {
         //output to json format
         echo json_encode($output);
     }
+    
+    public function ajax_all()
+    {
+        $data = $this->person->get_all();
+        //$data->dob = ($data->dob == '0000-00-00') ? '' : $data->dob; // if 0000-00-00 set tu empty for datepicker compatibility
+        echo json_encode($data);
+    }
  
     public function ajax_edit($id)
     {
@@ -122,8 +114,11 @@ class Inventory extends CI_Controller {
     {
         $this->_validate();
         $data = array(
-                'name' => $this->input->post('name'),
-                'desc' => $this->input->post('desc'),
+                'sku' => $this->input->post('sku'),
+                'buy_price' => $this->input->post('buy_price'),
+                'retail_price' => $this->input->post('retail_price'),
+                'stock_on_hand' => $this->input->post('stock_on_hand'),
+                'product_id' => $this->input->post('pid'),
             );
         $insert = $this->person->save($data);
         echo json_encode(array("status" => TRUE));
@@ -154,17 +149,31 @@ class Inventory extends CI_Controller {
         $data['inputerror'] = array();
         $data['status'] = TRUE;
  
-        if($this->input->post('name') == '')
+        if($this->input->post('sku') == '')
         {
-            $data['inputerror'][] = 'name';
-            $data['error_string'][] = 'Name is required';
+            $data['inputerror'][] = 'sku';
+            $data['error_string'][] = 'Sku is required';
             $data['status'] = FALSE;
         }
  
-        if($this->input->post('desc') == '')
+        if($this->input->post('buy_price') == '')
         {
-            $data['inputerror'][] = 'desc';
-            $data['error_string'][] = 'Description is required';
+            $data['inputerror'][] = 'buy_price';
+            $data['error_string'][] = 'Buy Price is required';
+            $data['status'] = FALSE;
+        }
+ 
+        if($this->input->post('retail_price') == '')
+        {
+            $data['inputerror'][] = 'retail_price';
+            $data['error_string'][] = 'Retail Price is required';
+            $data['status'] = FALSE;
+        }
+ 
+        if($this->input->post('stock_on_hand') == '')
+        {
+            $data['inputerror'][] = 'stock_on_hand';
+            $data['error_string'][] = 'Stock on Hand is required';
             $data['status'] = FALSE;
         }
  

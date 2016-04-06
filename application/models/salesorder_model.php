@@ -1,10 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Inventory_model extends CI_Model{
+class Salesorder_model extends CI_Model{
 
  
-    var $table = 'products';
-    var $column = array('name','desc','updated_at'); //set column field database for order and search
+    var $table = 'sales_orders';
+    var $column = array('company_id','created_at','updated_at'); //set column field database for order and search
     var $order = array('id' => 'desc'); // default order
  
     public function __construct()
@@ -22,7 +22,7 @@ class Inventory_model extends CI_Model{
      
         foreach ($this->column as $item) // loop column
         {
-            if($_POST['search']['value']) // if datatable send POST for search
+            if(isset($_POST['search']['value']) && !empty($_POST['search']['value'])) // if datatable send POST for search
             {
                  
                 if($i===0) // first loop
